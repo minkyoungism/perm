@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>펌 컬 오래 유지하는 법 | 민경이즘</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple:      #7B5EA7;
+      --purple-light:#A78BCC;
+      --purple-bg:   #EDE8F7;
+      --purple-pale: #F5F1FB;
+      --beige:       #FAF7F4;
+      --beige-dark:  #F0EAE2;
+      --text:        #2D2D2D;
+      --text-sub:    #666;
+      --white:       #FFFFFF;
+      --shadow:      0 4px 20px rgba(123,94,167,.12);
+      --radius:      18px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--beige);
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(145deg, #ede8f7 0%, #f5f0fb 50%, #faf7f4 100%);
+      padding: 80px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(123,94,167,.08) 0%, transparent 70%);
+      top: -100px; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--purple);
+      color: #fff;
+      font-size: 12px; font-weight: 600; letter-spacing: .08em;
+      padding: 5px 16px; border-radius: 100px; margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 5vw, 42px);
+      font-weight: 900; line-height: 1.3; color: var(--text); margin-bottom: 12px;
+    }
+    .hero h1 em { color: var(--purple); font-style: normal; }
+    .hero .sub { font-size: 15px; color: var(--text-sub); margin-bottom: 32px; }
+
+    .author-chip {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--white); border-radius: 100px;
+      padding: 10px 20px; box-shadow: var(--shadow);
+      font-size: 14px; font-weight: 500;
+    }
+    .author-chip .dot {
+      width: 44px; height: 44px; border-radius: 50%;
+      overflow: hidden; border: 2px solid var(--purple-light); flex-shrink: 0;
+    }
+    .author-chip .dot img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+
+    .hero-links {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 20px;
+    }
+    .hero-link-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: #fff; border-radius: 100px; padding: 9px 18px;
+      text-decoration: none; color: #2D2D2D;
+      box-shadow: 0 4px 20px rgba(123,94,167,.12);
+      font-size: 13px; font-weight: 600;
+      transition: transform .15s, box-shadow .15s; white-space: nowrap;
+    }
+    .hero-link-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(123,94,167,.2); }
+
+    /* ── LAYOUT ───────────────────────────────────── */
+    .container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 56px 0 0; }
+    section:last-of-type { padding-bottom: 80px; }
+
+    /* ── SECTION TITLE ────────────────────────────── */
+    .sec-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      color: var(--purple); text-transform: uppercase; margin-bottom: 10px;
+    }
+    .sec-label::before {
+      content: ''; display: block; width: 18px; height: 2px;
+      background: var(--purple); border-radius: 2px;
+    }
+    .sec-title { font-size: clamp(20px, 3.5vw, 28px); font-weight: 800; line-height: 1.4; margin-bottom: 6px; }
+    .sec-desc  { font-size: 14px; color: var(--text-sub); margin-bottom: 32px; }
+
+    /* ── CARD ─────────────────────────────────────── */
+    .card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 28px; box-shadow: var(--shadow); margin-bottom: 16px;
+    }
+
+    /* ── COMPARE CARD ─────────────────────────────── */
+    .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 540px) {
+      .compare-wrap { grid-template-columns: 1fr; }
+      .closing-profile-grid { grid-template-columns: 1fr !important; }
+    }
+
+    .compare-card { background: var(--white); border-radius: var(--radius); padding: 24px 20px; box-shadow: var(--shadow); }
+    .compare-card .tag {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      padding: 4px 14px; border-radius: 100px; margin-bottom: 16px;
+    }
+    .compare-card.bad  .tag { background: #e8e8e8; color: #555; }
+    .compare-card.good .tag { background: var(--purple); color: #fff; }
+    .compare-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .compare-card li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 500; }
+    .compare-card li .icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; flex-shrink: 0; margin-top: 1px;
+    }
+    .compare-card.bad  li .icon { background: #f0f0f0; color: #999; }
+    .compare-card.good li .icon { background: var(--purple-bg); color: var(--purple); }
+
+    /* ── TARGET LIST ──────────────────────────────── */
+    .target-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .target-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--purple-pale); border-radius: 12px;
+      padding: 14px 18px; font-size: 14px; font-weight: 500;
+    }
+    .target-item .num {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--purple); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── PROBLEM BLOCK ────────────────────────────── */
+    .prob-block {
+      background: var(--white); border-radius: var(--radius);
+      padding: 28px; box-shadow: var(--shadow); margin-bottom: 20px;
+    }
+    .prob-block .prob-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .prob-block .step-badge {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--purple); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; flex-shrink: 0;
+    }
+    .prob-block .prob-title { font-size: 17px; font-weight: 800; }
+    .prob-block .prob-sub   { font-size: 13px; color: var(--text-sub); }
+
+    .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .checklist li {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 14px; padding: 12px 14px;
+      background: var(--beige); border-radius: 10px;
+    }
+    .checklist li::before {
+      content: '✓'; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--purple-bg); color: var(--purple);
+      font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    .summary-quote {
+      background: var(--purple-bg); border-left: 4px solid var(--purple);
+      border-radius: 0 12px 12px 0; padding: 14px 18px;
+      font-size: 14px; font-weight: 700; color: var(--purple);
+    }
+
+    /* ── POINT LIST ───────────────────────────────── */
+    .point-list { display: flex; flex-direction: column; gap: 12px; }
+    .point-item {
+      background: var(--white); border-radius: 14px; padding: 20px;
+      box-shadow: var(--shadow); display: flex; gap: 16px; align-items: flex-start;
+    }
+    .point-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--purple-bg); color: var(--purple);
+      font-size: 14px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .point-content .point-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .point-content .point-desc  { font-size: 13px; color: var(--text-sub); }
+
+    /* ── FORMULA BOX ──────────────────────────────── */
+    .formula-box {
+      background: var(--purple); border-radius: var(--radius);
+      padding: 32px 28px; color: #fff; text-align: center; margin-bottom: 24px;
+    }
+    .formula-box .f-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; opacity: .75; margin-bottom: 14px;
+    }
+    .formula-box .f-eq { font-size: clamp(15px, 3vw, 18px); font-weight: 800; line-height: 2; }
+    .formula-box .f-eq span { opacity: .65; font-size: .85em; }
+
+    /* ── TODO LIST ────────────────────────────────── */
+    .todo-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .todo-item {
+      display: flex; gap: 12px; align-items: center;
+      font-size: 14px; padding: 12px 14px;
+      background: var(--beige); border-radius: 10px;
+    }
+    .todo-box { width: 18px; height: 18px; border: 2px solid var(--purple-light); border-radius: 5px; flex-shrink: 0; }
+
+    /* ── CLOSING ──────────────────────────────────── */
+    .closing {
+      background: linear-gradient(145deg, #ede8f7, #faf7f4);
+      border-radius: var(--radius); padding: 36px 28px; text-align: center;
+      margin-bottom: 28px; box-shadow: var(--shadow);
+    }
+    .closing p { font-size: 15px; font-weight: 500; line-height: 1.9; color: var(--text); }
+    .closing .author-note { margin-top: 20px; font-size: 13px; color: var(--text-sub); font-style: italic; }
+
+    /* ── CTA LINKS ────────────────────────────────── */
+    .cta-links { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .cta-btn {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: 8px;
+      background: var(--white); border-radius: 14px; padding: 16px 12px;
+      text-decoration: none; color: var(--text); box-shadow: var(--shadow);
+      font-size: 12px; font-weight: 600; transition: transform .15s, box-shadow .15s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(123,94,167,.18); }
+    .cta-btn .icon-box {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--purple-bg); color: var(--purple);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+
+    /* ── DIVIDER ──────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--beige-dark), transparent);
+      margin: 40px 0 0;
+    }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    footer {
+      text-align: center; padding: 32px 24px;
+      font-size: 12px; color: #aaa;
+      background: var(--white); margin-top: 56px;
+    }
+    footer strong { color: var(--purple); }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">PERM CURL CARE GUIDE</div>
+    <h1>펌 후 컬이 금방 늘어진다면<br /><em>이 4가지 습관 때문입니다</em></h1>
+    <p class="sub">25년 현장 경험으로 정리한 컬 오래 유지하는 법</p>
+    <div style="margin-bottom:28px;">
+      <img src="펌이미지1%20(1).png" alt="민경이즘" style="height:180px; object-fit:contain;" />
+    </div>
+    <div class="author-chip">
+      <div class="dot">
+        <img src="../profile.png" alt="민경이즘 프로필" />
+      </div>
+      <span>25년차 현장 전문 미용교수 · <strong>민경이즘</strong></span>
+    </div>
+    <div class="hero-links">
+      <a href="https://www.instagram.com/minkyoungism" target="_blank" rel="noopener" class="hero-link-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/>
+            <stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/>
+            <stop offset="100%" stop-color="#bc1888"/>
+          </linearGradient></defs>
+          <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#ig)"/>
+          <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="1.8" fill="none"/>
+          <circle cx="17.2" cy="6.8" r="1.2" fill="white"/>
+        </svg>
+        인스타그램
+      </a>
+      <a href="https://www.youtube.com/@minkyoungism" target="_blank" rel="noopener" class="hero-link-btn">▶️ 유튜브</a>
+      <a href="https://blog.naver.com/minkyoungism" target="_blank" rel="noopener" class="hero-link-btn">📝 블로그</a>
+      <a href="https://www.tiktok.com/@minkyoungism" target="_blank" rel="noopener" class="hero-link-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.2 8.2 0 004.8 1.54V7a4.85 4.85 0 01-1.03-.31z"/></svg>
+        틱톡
+      </a>
+    </div>
+  </div>
+
+  <!-- SECTION 1: OVERVIEW -->
+  <section>
+    <div class="container">
+      <div class="sec-label">Overview</div>
+      <h2 class="sec-title">펌 했는데 컬이 금방 늘어진 경험, 있으신가요?</h2>
+      <p class="sec-desc">원인은 시술이 아니라 <strong>관리 습관</strong>에 있는 경우가 대부분입니다.</p>
+
+      <div class="compare-wrap">
+        <div class="compare-card bad">
+          <span class="tag">컬이 늘어지는 습관</span>
+          <ul>
+            <li><span class="icon">✕</span>당일 바로 샴푸하기</li>
+            <li><span class="icon">✕</span>수건으로 거칠게 비비기</li>
+            <li><span class="icon">✕</span>완전 건조 후 스타일링</li>
+            <li><span class="icon">✕</span>손으로 계속 쓸어내리기</li>
+          </ul>
+        </div>
+        <div class="compare-card good">
+          <span class="tag">컬이 오래 사는 습관</span>
+          <ul>
+            <li><span class="icon">✓</span>24시간 후 샴푸하기</li>
+            <li><span class="icon">✓</span>수건으로 꾹꾹 눌러 물기 제거</li>
+            <li><span class="icon">✓</span>반건조 상태에서 컬 제품 바르기</li>
+            <li><span class="icon">✓</span>건드리지 않고 자연 건조</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <p style="font-size:14px; font-weight:600; margin-bottom:12px; color:var(--purple)">이런 분께 특히 도움이 됩니다</p>
+        <div class="target-list">
+          <div class="target-item"><div class="num">1</div>펌을 했는데 며칠 만에 컬이 늘어진 경험이 있는 분</div>
+          <div class="target-item"><div class="num">2</div>어떻게 관리해야 컬이 오래 가는지 모르는 분</div>
+          <div class="target-item"><div class="num">3</div>컬 제품을 쓰는데도 효과가 없다고 느끼는 분</div>
+          <div class="target-item"><div class="num">4</div>다음 펌 전까지 컬 상태를 최대한 유지하고 싶은 분</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2: 4 MISTAKES -->
+  <section>
+    <div class="container">
+      <div class="sec-label">Common Mistakes</div>
+      <h2 class="sec-title">컬을 망치는 4가지 습관</h2>
+      <p class="sec-desc">무심코 하는 이 습관들이 컬을 빠르게 늘어지게 만듭니다.</p>
+
+      <div class="prob-block">
+        <div class="prob-header">
+          <div class="step-badge">1</div>
+          <div>
+            <div class="prob-title">펌한 당일 바로 샴푸하는 것</div>
+            <div class="prob-sub">가장 많이 하는 실수입니다</div>
+          </div>
+        </div>
+        <img src="펌이미지1%20(5).png" alt="당일 샴푸 금지" style="width:100%; border-radius:12px; margin-bottom:16px;" />
+        <p style="font-size:14px; color:var(--text-sub); margin-bottom:16px;">
+          펌 직후 모발은 새로운 형태로 고정되는 중입니다. 당일 샴푸는 이 과정을 방해해 컬이 약해질 수 있습니다.
+        </p>
+        <ul class="checklist">
+          <li>최소 24시간 후 샴푸하기</li>
+          <li>머리가 젖은 상태로 잠들지 않기</li>
+        </ul>
+        <div class="summary-quote">당일 샴푸는 참아주세요. 24시간만 기다리면 컬이 훨씬 오래 갑니다</div>
+      </div>
+
+      <div class="prob-block">
+        <div class="prob-header">
+          <div class="step-badge">2</div>
+          <div>
+            <div class="prob-title">수건으로 거칠게 비비는 것</div>
+            <div class="prob-sub">비빌수록 컬이 풀립니다</div>
+          </div>
+        </div>
+        <img src="펌이미지1%20(4).png" alt="수건 비비기 금지" style="width:100%; border-radius:12px; margin-bottom:16px;" />
+        <p style="font-size:14px; color:var(--text-sub); margin-bottom:16px;">
+          수건 마찰은 모발 표면을 손상시키고 웨이브 형태를 흐트러뜨립니다. 컬이 푸석하고 부스스하게 보이는 원인이 됩니다.
+        </p>
+        <ul class="checklist">
+          <li>수건으로 꾹꾹 눌러 물기만 제거하기</li>
+          <li>마이크로파이버 수건 사용하면 더 좋음</li>
+        </ul>
+        <div class="summary-quote">비비지 말고 꾹꾹 눌러주세요. 마찰이 줄어야 컬이 삽니다</div>
+      </div>
+
+      <div class="prob-block">
+        <div class="prob-header">
+          <div class="step-badge">3</div>
+          <div>
+            <div class="prob-title">완전히 마른 상태에서만 스타일링하는 것</div>
+            <div class="prob-sub">타이밍이 중요합니다</div>
+          </div>
+        </div>
+        <img src="펌이미지1%20(3).png" alt="반건조 상태에서 컬 제품" style="width:100%; border-radius:12px; margin-bottom:16px;" />
+        <p style="font-size:14px; color:var(--text-sub); margin-bottom:16px;">
+          컬 제품은 반건조 상태일 때 발라야 가장 효과적입니다. 완전히 마른 후에는 이미 형태가 굳어 제품이 잘 스며들지 않습니다.
+        </p>
+        <ul class="checklist">
+          <li>70~80% 건조됐을 때 컬 제품 바르기</li>
+          <li>손가락으로 컬을 살짝 잡아주며 그대로 고정</li>
+          <li>드라이기 사용 시 디퓨저 활용하기</li>
+        </ul>
+        <div class="summary-quote">반건조 상태에서 컬 제품을 발라야 형태가 예쁘게 고정됩니다</div>
+      </div>
+
+      <div class="prob-block">
+        <div class="prob-header">
+          <div class="step-badge">4</div>
+          <div>
+            <div class="prob-title">거울 보면서 손으로 계속 만지는 것</div>
+            <div class="prob-sub">무심코 하는 습관이 가장 위험합니다</div>
+          </div>
+        </div>
+        <img src="펌이미지1%20(2).png" alt="손으로 만지지 않기" style="width:100%; border-radius:12px; margin-bottom:16px;" />
+        <p style="font-size:14px; color:var(--text-sub); margin-bottom:16px;">
+          머리를 쓸어내리거나 만지는 행동은 컬 형태를 직접 늘어뜨립니다. 신경 쓰일수록 더 자주 만지게 되고, 만질수록 더 빨리 늘어집니다.
+        </p>
+        <ul class="checklist">
+          <li>스타일링 후 최대한 손 대지 않기</li>
+          <li>컬이 신경 쓰이면 쓸어내리지 말고 살짝 들어올리기</li>
+        </ul>
+        <div class="summary-quote">손으로 쓸어내리는 순간 컬이 늘어집니다. 만지지 않는 것이 최선의 관리입니다</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3: HOW TO -->
+  <section>
+    <div class="container">
+      <div class="sec-label">How To</div>
+      <h2 class="sec-title">컬 오래 유지하는 올바른 순서</h2>
+      <p class="sec-desc">이 순서대로만 해도 컬이 훨씬 오래 갑니다.</p>
+
+      <div class="formula-box">
+        <div class="f-label">Curl Care Formula</div>
+        <div class="f-eq">
+          <span>24시간 샴푸 참기</span> → <strong>꾹꾹 눌러 물기 제거</strong> →<br />
+          <span>반건조 상태에서 컬 제품</span> → <strong>건드리지 않고 고정</strong>
+        </div>
+      </div>
+
+      <div class="point-list">
+        <div class="point-item">
+          <div class="point-num">1</div>
+          <div class="point-content">
+            <div class="point-title">샴푸는 24시간 후에</div>
+            <div class="point-desc">펌 당일은 참아주세요. 하루만 지나도 컬 고정력이 훨씬 좋아집니다.</div>
+          </div>
+        </div>
+        <div class="point-item">
+          <div class="point-num">2</div>
+          <div class="point-content">
+            <div class="point-title">수건은 꾹꾹 눌러서</div>
+            <div class="point-desc">비비지 말고 모발을 수건으로 감싸 꾹꾹 눌러 물기를 제거합니다.</div>
+          </div>
+        </div>
+        <div class="point-item">
+          <div class="point-num">3</div>
+          <div class="point-content">
+            <div class="point-title">반건조 상태에서 컬 제품 바르기</div>
+            <div class="point-desc">70~80% 건조됐을 때 컬 크림이나 무스를 고르게 발라 컬 형태를 잡아줍니다.</div>
+          </div>
+        </div>
+        <div class="point-item">
+          <div class="point-num">4</div>
+          <div class="point-content">
+            <div class="point-title">건드리지 않고 자연 건조</div>
+            <div class="point-desc">제품을 바른 후 최대한 만지지 않고 자연스럽게 건조하면 컬이 예쁘게 살아납니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4: CHECKLIST -->
+  <section>
+    <div class="container">
+      <div class="sec-label">Checklist</div>
+      <h2 class="sec-title">펌 후 관리 체크리스트</h2>
+      <div class="card">
+        <ul class="todo-list">
+          <li class="todo-item"><div class="todo-box"></div>펌 당일 샴푸 참았나요?</li>
+          <li class="todo-item"><div class="todo-box"></div>수건으로 꾹꾹 눌러 물기 제거했나요?</li>
+          <li class="todo-item"><div class="todo-box"></div>반건조 상태에서 컬 제품 발랐나요?</li>
+          <li class="todo-item"><div class="todo-box"></div>스타일링 후 손으로 만지지 않았나요?</li>
+          <li class="todo-item"><div class="todo-box"></div>자면서 머리카락이 눌리지 않게 했나요?</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5: CLOSING -->
+  <section>
+    <div class="container">
+      <div class="sec-label">Closing</div>
+      <h2 class="sec-title">마무리하며</h2>
+
+      <div class="closing-profile-grid" style="display:grid; grid-template-columns:3fr 2fr; gap:16px; align-items:stretch; margin-bottom:20px;">
+        <div class="closing" style="margin-bottom:0;">
+          <p>
+            컬은 시술보다<br />
+            <strong>관리 습관이 더 중요합니다.</strong><br /><br />
+            작은 습관 하나가<br />
+            컬의 수명을 2배 이상 늘려줄 수 있습니다.
+          </p>
+          <div class="author-note">
+            현장 25년, 미용 교수 경험을 바탕으로<br />
+            앞으로도 실용적인 기준을 자료로 계속 정리해 드리겠습니다. 🙏
+          </div>
+        </div>
+
+        <div style="background:var(--white); border-radius:var(--radius); padding:18px 16px; box-shadow:var(--shadow); display:flex; flex-direction:column; justify-content:center;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; border:2px solid var(--purple-light); flex-shrink:0;">
+              <img src="../profile.png" style="width:100%; height:100%; object-fit:cover; object-position:center top;" alt="민경이즘 프로필" />
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:900; color:var(--text); margin-bottom:1px;">민경이즘</div>
+              <div style="font-size:11px; color:var(--purple); font-weight:600; line-height:1.4;">헤어디렉터 · 이미지컨설턴트 · 교수</div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:11px; color:var(--text-sub); line-height:1.5;">
+              <span style="flex-shrink:0;">🎓</span><span>겸임교수 · 강의 10년차</span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:11px; color:var(--text-sub); line-height:1.5;">
+              <span style="flex-shrink:0;">🔬</span><span>이학박사 · 향장생물학전공</span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:11px; color:var(--text-sub); line-height:1.5;">
+              <span style="flex-shrink:0;">📚</span><span>교육학석사 · 미용교육전공</span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:11px; color:var(--text-sub); line-height:1.5;">
+              <span style="flex-shrink:0;">✂️</span><span>MIN BEAUTY HAIR · 25년차</span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:flex-start; font-size:11px; color:var(--text-sub); line-height:1.5;">
+              <span style="flex-shrink:0;">📖</span><span>저서 · 행복한성공수업</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:14px; font-weight:700; margin-bottom:16px; color:var(--text);">더 자세한 상담이 필요하시다면</p>
+      <div class="cta-links">
+        <a href="https://open.kakao.com/o/si1Fo8ai" target="_blank" rel="noopener" class="cta-btn">
+          <div class="icon-box">💬</div>
+          <div>
+            <div style="font-size:13px; color:var(--text-sub); font-weight:400;">얼굴형 이미지 맞춤 1:1 상담</div>
+          </div>
+        </a>
+        <a href="https://open.kakao.com/o/svHTxrbi" target="_blank" rel="noopener" class="cta-btn">
+          <div class="icon-box">✂️</div>
+          <div>
+            <div style="font-size:13px; color:var(--text-sub); font-weight:400;">민뷰티헤어 대치 샵 예약</div>
+          </div>
+        </a>
+        <a href="https://smartstore.naver.com/kyobobook/products/9170054197?NaPm=ct%3Dmqdk7duo%7Cci%3D2ad7c9f8100dfdbb996eb6bb89362d081750c6e0%7Ctr%3Dboknx%7Csn%3D172908%7Chk%3Dc3f09810d8ebd5ece1cd92cd2234ce0f2b0c1a95" target="_blank" rel="noopener" class="cta-btn">
+          <div class="icon-box">📕</div>
+          <div>
+            <div style="font-size:13px; color:var(--text-sub); font-weight:400;">책 소개 · 행복한성공수업</div>
+          </div>
+        </a>
+        <a href="https://form.naver.com/response/E9FpEOSa5QdCwW_n1JGsnA" target="_blank" rel="noopener" class="cta-btn">
+          <div class="icon-box">🏢</div>
+          <div>
+            <div style="font-size:13px; color:var(--text-sub); font-weight:400;">기업 · 기관 외부 교육 문의</div>
+          </div>
+        </a>
+        <a href="https://form.naver.com/response/mkPLwslRloX5F2r_s34MBA" target="_blank" rel="noopener" class="cta-btn">
+          <div class="icon-box">🎓</div>
+          <div>
+            <div style="font-size:13px; color:var(--text-sub); font-weight:400;">1:1 컨설팅 · 교육 문의</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 <strong>민경이즘</strong> · 무단 전재 및 재배포 금지</p>
+    <p style="margin-top:6px;">이 문서의 저작권은 '민경이즘'에 있습니다.</p>
+  </footer>
+
+</body>
+</html>
